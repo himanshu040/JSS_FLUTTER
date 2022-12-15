@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jss_flutter/utility/Util.dart';
 
 class HumanResource extends StatefulWidget {
    HumanResource({Key? key}) : super(key: key);
@@ -16,6 +20,10 @@ class _HumanResourceState extends State<HumanResource> {
   List<String> selectFacility=["Yes","No"];
   int indexFacility=-1;
   String? facilit;
+  File? filepathOfficeEvidence;
+  File? filepathTechnicalEvidence;
+  String? filenameOfficeEvidence;
+  String? filenameTechnicalEvidence;
 
   @override
   Widget build(BuildContext context) {
@@ -153,6 +161,61 @@ class _HumanResourceState extends State<HumanResource> {
                           SliverPadding(padding: EdgeInsets.symmetric(vertical: 5)),
                           SliverToBoxAdapter(
                             child: Container(
+                              height: MediaQuery.of(context).size.height*0.08,
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  AutoSizeText("Upload Office Staff Evidence Doc",
+                                    style: GoogleFonts.openSans(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                  filepathOfficeEvidence!=null?GestureDetector(
+                                    onTap: () async{
+                                      Util util=Util();
+                                      final file=await util.pickPdfFile();
+                                      if(file!=null) {
+                                        setState((){
+                                          filepathOfficeEvidence=file;
+                                          filenameOfficeEvidence=(file.toString().split('/').last);
+                                        });
+                                      }
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Icon(Icons.picture_as_pdf_rounded),
+                                        Expanded(
+                                          child: AutoSizeText(filenameOfficeEvidence.toString(),
+                                            style: GoogleFonts.openSans(
+                                                fontSize: 8
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ):GestureDetector(
+                                      onTap: () async{
+                                        Util util=Util();
+                                        final file=await util.pickPdfFile();
+                                        if(file!=null) {
+                                          setState((){
+                                            filepathOfficeEvidence=file;
+                                            filenameOfficeEvidence=(file.toString().split('/').last);
+                                          });
+                                        }
+                                      },
+
+                                      child: SvgPicture.asset("images/Upload record.svg",height:MediaQuery.of(context).size.height*0.08,fit: BoxFit.fill,))
+                                ],
+                              ),
+                            ),
+                          ),
+                          SliverPadding(padding: EdgeInsets.symmetric(vertical: 10)),
+                          SliverToBoxAdapter(
+                            child: Container(
                               height: MediaQuery.of(context).size.height*0.04,
                               padding: EdgeInsets.symmetric(horizontal: 10),
                               child: Row(
@@ -192,6 +255,63 @@ class _HumanResourceState extends State<HumanResource> {
                                         ),
                                       )
                                   )
+                                ],
+                              ),
+                            ),
+                          ),
+                          SliverPadding(padding: EdgeInsets.symmetric(vertical: 5)),
+                          SliverToBoxAdapter(
+                            child: Container(
+                              height: MediaQuery.of(context).size.height*0.08,
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  AutoSizeText("Upload Technical Staff Evidence Doc",
+                                    style: GoogleFonts.openSans(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                  filepathTechnicalEvidence!=null?
+                                  GestureDetector(
+                                    onTap: () async{
+                                      Util util=Util();
+                                      final file=await util.pickPdfFile();
+                                      if(file!=null) {
+                                        setState((){
+                                          filepathTechnicalEvidence=file;
+                                          filenameTechnicalEvidence=(file.toString().split('/').last);
+                                        });
+                                      }
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Icon(Icons.picture_as_pdf_rounded),
+                                        Expanded(
+                                          child: AutoSizeText(filenameTechnicalEvidence.toString(),
+                                            style: GoogleFonts.openSans(
+                                                fontSize: 8
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ):
+                                  GestureDetector(
+                                      onTap: () async{
+                                        Util util=Util();
+                                        final file=await util.pickPdfFile();
+                                        if(file!=null) {
+                                          setState((){
+                                            filepathTechnicalEvidence=file;
+                                            filenameTechnicalEvidence=(file.toString().split('/').last);
+                                          });
+                                        }
+                                      },
+
+                                      child: SvgPicture.asset("images/Upload record.svg",height:MediaQuery.of(context).size.height*0.08,fit: BoxFit.fill,))
                                 ],
                               ),
                             ),
