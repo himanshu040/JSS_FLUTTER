@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../components/pdfViewer.dart';
@@ -161,6 +162,26 @@ class Util {
     }
     return File(result.paths.first.toString());
   }
+  Future<File?> pickPicture() async
+  {
+    final ImagePicker _picker = ImagePicker();
+    final result= await _picker.pickImage(source: ImageSource.gallery);
+    if(result==null) {
+      return null;
+    }
+    return File(result.path.toString());
+  }
+  Future<File?> pickPictureCamera() async
+  {
+    final ImagePicker _picker = ImagePicker();
+    final result= await _picker.pickImage(source: ImageSource.camera);
+    if(result==null) {
+      return null;
+    }
+    return File(result.path.toString());
+  }
+
+
 }
 
 

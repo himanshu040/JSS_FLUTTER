@@ -1,14 +1,18 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Infra extends StatefulWidget {
-  const Infra({Key? key}) : super(key: key);
+import '../utility/Util.dart';
 
+class Infra extends StatefulWidget {
+   Infra(this.context,{Key? key}) : super(key: key);
+  BuildContext context;
   @override
   State<Infra> createState() => _InfraState();
 }
@@ -18,12 +22,82 @@ class _InfraState extends State<Infra> {
   List<String> selectFacility=["Yes","No"];
   int indexFacility=-1;
   String? facilit;
+  List<dynamic> photopathsOfficeSpace=[];
+  List<dynamic> photopathsBasicFacility=[];
+  List<dynamic> photopathsTools=[];
+  File? filepath;
+  File? filepathOfficeAgreement;
+  String? filename;
+  String? filenameOfficeAgreement;
+  bool containervisible=false;
+  final controller = ScrollController();
 
   @override
+  void initState()
+  {
+    photopathsOfficeSpace.add(
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 2,vertical: 1),
+          height: MediaQuery.of(widget.context).size.height*0.10,
+          width: MediaQuery.of(widget.context).size.height*0.10,
+          child: Container(
+            color: const Color(0xffa1cbf1).withOpacity(0.4),
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: MediaQuery.of(widget.context).size.height*0.05,
+            ),
+          ),
+        ));
+    photopathsBasicFacility.add(
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 2,vertical: 1),
+          height: MediaQuery.of(widget.context).size.height*0.10,
+          width: MediaQuery.of(widget.context).size.height*0.10,
+          child: Container(
+            color: const Color(0xffa1cbf1).withOpacity(0.4),
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: MediaQuery.of(widget.context).size.height*0.05,
+            ),
+          ),
+        ));
+    photopathsTools.add(
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 2,vertical: 1),
+          height: MediaQuery.of(widget.context).size.height*0.10,
+          width: MediaQuery.of(widget.context).size.height*0.10,
+          child: Container(
+            color: const Color(0xffa1cbf1).withOpacity(0.4),
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: MediaQuery.of(widget.context).size.height*0.05,
+            ),
+          ),
+        ));
+    super.initState();
+  }
+  scrollToItem(int index)
+  {
+    final contentSize = controller.position.viewportDimension + controller.position.maxScrollExtent;
+    final target = contentSize * index / 3;
+    controller.position.animateTo(
+      target,
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.easeInOut,
+    );
+  }
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () { FocusManager.instance.primaryFocus?.unfocus();
 
+    return GestureDetector(
+      onTap: () {
+
+        FocusManager.instance.primaryFocus?.unfocus();
+        setState(() {
+          containervisible=false;
+        });
       },
       child: Scaffold(
       resizeToAvoidBottomInset: false,
@@ -106,6 +180,7 @@ class _InfraState extends State<Infra> {
                               topRight:Radius.circular(50) )
                       ),
                       child: CustomScrollView(
+                        controller: controller,
                         slivers: [
                           SliverToBoxAdapter(
                             child: SizedBox(
@@ -115,7 +190,6 @@ class _InfraState extends State<Infra> {
                                 style: GoogleFonts.openSans(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600
-
                                 ),
                               ),
                             ),
@@ -168,6 +242,59 @@ class _InfraState extends State<Infra> {
                           ),
                           SliverToBoxAdapter(
                             child: Container(
+                              width: MediaQuery.of(context).size.width*0.60,
+                              child: AutoSizeText("Upload Building Images(1-3)*",
+                                style: GoogleFonts.openSans(
+                                    fontSize: 16
+                                ),
+                              ),
+                            ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: SizedBox(
+                                width: MediaQuery.of(context).size.width*0.80,
+                                height: MediaQuery.of(context).size.height*0.10,
+                                child: ListView.builder(
+                                    itemCount: photopathsOfficeSpace.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder:(context,index){
+                                      if(index==0) {
+                                        return  Visibility(visible:photopathsOfficeSpace.length==4?false:true,
+                                            child: GestureDetector(
+                                              onTap: () async{
+                                                Util util=Util();
+                                                final image=await util.pickPicture();
+                                                if(image!=null)
+                                                {
+                                                  setState(() {
+                                                    photopathsOfficeSpace.add(
+                                                        Container(
+                                                          margin: const EdgeInsets.symmetric(horizontal: 2,vertical: 1),
+                                                          height: MediaQuery.of(context).size.height*0.10,
+                                                          width: MediaQuery.of(context).size.height*0.10,
+                                                          child: Container(
+                                                              color: const Color(0xffa1cbf1).withOpacity(0.4),
+                                                              child: Image.file(image,
+                                                                height:MediaQuery.of(context).size.height*0.10,
+                                                                width:MediaQuery.of(context).size.height*0.10,
+                                                                fit: BoxFit.fitWidth,
+                                                              )
+                                                          ),
+                                                        )
+                                                    );
+                                                  });
+                                                }
+                                              },
+                                              child: photopathsOfficeSpace[0],
+                                            ));
+
+                                      } else
+                                        return photopathsOfficeSpace[index];
+                                    } )
+                            ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: Container(
                               width: MediaQuery.of(context).size.width,
                               margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                               child: Row(
@@ -208,37 +335,62 @@ class _InfraState extends State<Infra> {
                             )
                           ),
                           SliverToBoxAdapter(
-                            child: Container(
-                              width: MediaQuery.of(context).size.width*0.60,
-                              child: AutoSizeText("Upload Building Images(1-3)*",
-                                style: GoogleFonts.openSans(
-                                    fontSize: 16
+                            child: Visibility(
+                              visible: facilit=="Yes"?true:false,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width*0.60,
+                                child: AutoSizeText("Upload Basic Facilities Images(1-3)*",
+                                  style: GoogleFonts.openSans(
+                                      fontSize: 16
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                           SliverToBoxAdapter(
-                            child: Container(
-                              width: MediaQuery.of(context).size.width*0.80,
-                              height: MediaQuery.of(context).size.height*0.10,
-                              child:ListView.builder(
-                                  itemCount: 3,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder:(context,index){
-                                return Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 2,vertical: 1),
+                            child: Visibility(
+                              visible: facilit=="Yes"?true:false,
+                              child: SizedBox(
+                                  width: MediaQuery.of(context).size.width*0.80,
                                   height: MediaQuery.of(context).size.height*0.10,
-                                  width: MediaQuery.of(context).size.height*0.10,
-                                  child: Container(
-                                    color: Color(0xffa1cbf1).withOpacity(0.4),
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                      size: MediaQuery.of(context).size.height*0.05,
-                                    ),
-                                  ),
-                                );
-                              } )
+                                  child: ListView.builder(
+                                      itemCount: photopathsBasicFacility.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder:(context,index){
+                                        if(index==0) {
+                                          return  Visibility(visible:photopathsBasicFacility.length==4?false:true,
+                                              child: GestureDetector(
+                                                onTap: () async{
+                                                  Util util=Util();
+                                                  final image=await util.pickPicture();
+                                                  if(image!=null)
+                                                  {
+                                                    setState(() {
+                                                      photopathsBasicFacility.add(
+                                                          Container(
+                                                            margin: const EdgeInsets.symmetric(horizontal: 2,vertical: 1),
+                                                            height: MediaQuery.of(context).size.height*0.10,
+                                                            width: MediaQuery.of(context).size.height*0.10,
+                                                            child: Container(
+                                                                color: const Color(0xffa1cbf1).withOpacity(0.4),
+                                                                child: Image.file(image,
+                                                                  height:MediaQuery.of(context).size.height*0.10,
+                                                                  width:MediaQuery.of(context).size.height*0.10,
+                                                                  fit: BoxFit.fitWidth,
+                                                                )
+                                                            ),
+                                                          )
+                                                      );
+                                                    });
+                                                  }
+                                                },
+                                                child: photopathsBasicFacility[0],
+                                              ));
+
+                                        } else
+                                          return photopathsBasicFacility[index];
+                                      } )
+                              ),
                             ),
                           ),
                           SliverPadding(padding: EdgeInsets.symmetric(vertical: 10)),
@@ -300,6 +452,59 @@ class _InfraState extends State<Infra> {
                               ),
                             ),
                           ),
+                          SliverToBoxAdapter(
+                            child: Container(
+                              height: MediaQuery.of(context).size.height*0.08,
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  AutoSizeText("Upload Training Centre Doc",
+                                    style: GoogleFonts.openSans(
+                                        fontSize: 16
+                                    ),
+                                  ),
+                                  filepath!=null?GestureDetector(
+                                    onTap: () async{
+                                      Util util=Util();
+                                      final file=await util.pickPdfFile();
+                                      if(file!=null) {
+                                        setState((){
+                                          filepath=file;
+                                          filename=(file.toString().split('/').last);
+                                        });
+                                      }
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Icon(Icons.picture_as_pdf_rounded),
+                                        Expanded(
+                                          child: AutoSizeText(filename.toString(),
+                                            style: GoogleFonts.openSans(
+                                                fontSize: 8
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ):GestureDetector(
+                                      onTap: () async{
+                                        Util util=Util();
+                                        final file=await util.pickPdfFile();
+                                        if(file!=null) {
+                                          setState((){
+                                            filepath=file;
+                                            filename=(file.toString().split('/').last);
+                                          });
+                                        }
+                                      },
+
+                                      child: SvgPicture.asset("images/Upload record.svg",height:MediaQuery.of(context).size.height*0.08,fit: BoxFit.fill,))
+                                ],
+                              ),
+                            ),
+                          ),
                           SliverPadding(padding: EdgeInsets.symmetric(vertical: 10)),
                           SliverToBoxAdapter(
                             child: SizedBox(
@@ -336,6 +541,12 @@ class _InfraState extends State<Infra> {
                                         style: GoogleFonts.openSans(
                                           fontSize: 16,
                                         ),
+                                        onTap: (){
+                                          scrollToItem(10);
+                                          setState(() {
+                                            containervisible=true;
+                                          });
+                                        },
 
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.symmetric(vertical: 6,horizontal: 4),
@@ -360,11 +571,117 @@ class _InfraState extends State<Infra> {
                               ),
                             ),
                           ),
+                          SliverToBoxAdapter(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width*0.60,
+                              child: AutoSizeText("Upload tools images",
+                                style: GoogleFonts.openSans(
+                                    fontSize: 16
+                                ),
+                              ),
+                            ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: SizedBox(
+                                width: MediaQuery.of(context).size.width*0.80,
+                                height: MediaQuery.of(context).size.height*0.10,
+                                child: ListView.builder(
+                                    itemCount: photopathsTools.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder:(context,index){
+                                      if(index==0) {
+                                        return  Visibility(visible:photopathsTools.length==4?false:true,
+                                            child: GestureDetector(
+                                              onTap: () async{
+                                                Util util=Util();
+                                                final image=await util.pickPicture();
+                                                if(image!=null)
+                                                {
+                                                  setState(() {
+                                                    photopathsTools.add(
+                                                        Container(
+                                                          margin: const EdgeInsets.symmetric(horizontal: 2,vertical: 1),
+                                                          height: MediaQuery.of(context).size.height*0.10,
+                                                          width: MediaQuery.of(context).size.height*0.10,
+                                                          child: Container(
+                                                              color: const Color(0xffa1cbf1).withOpacity(0.4),
+                                                              child: Image.file(image,
+                                                                height:MediaQuery.of(context).size.height*0.10,
+                                                                width:MediaQuery.of(context).size.height*0.10,
+                                                                fit: BoxFit.fitWidth,
+                                                              )
+                                                          ),
+                                                        )
+                                                    );
+                                                  });
+                                                }
+                                              },
+                                              child: photopathsTools[0],
+                                            ));
+                                      } else
+                                        return photopathsTools[index];
+                                    } )
+                            ),
+                          ),
+                          SliverPadding(padding: EdgeInsets.symmetric(vertical: 10)),
+                          SliverToBoxAdapter(
+                            child: Container(
+                              height: MediaQuery.of(context).size.height*0.08,
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  AutoSizeText("Upload Office Agreement Doc*",
+                                    style: GoogleFonts.openSans(
+                                        fontSize: 16,
+                                      fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                  filepathOfficeAgreement!=null?GestureDetector(
+                                    onTap: () async{
+                                      Util util=Util();
+                                      final file=await util.pickPdfFile();
+                                      if(file!=null) {
+                                        setState((){
+                                          filepathOfficeAgreement=file;
+                                          filenameOfficeAgreement=(file.toString().split('/').last);
+                                        });
+                                      }
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Icon(Icons.picture_as_pdf_rounded),
+                                        Expanded(
+                                          child: AutoSizeText(filename.toString(),
+                                            style: GoogleFonts.openSans(
+                                                fontSize: 8
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ):GestureDetector(
+                                      onTap: () async{
+                                        Util util=Util();
+                                        final file=await util.pickPdfFile();
+                                        if(file!=null) {
+                                          setState((){
+                                            filepathOfficeAgreement=file;
+                                            filenameOfficeAgreement=(file.toString().split('/').last);
+                                          });
+                                        }
+                                      },
+
+                                      child: SvgPicture.asset("images/Upload record.svg",height:MediaQuery.of(context).size.height*0.08,fit: BoxFit.fill,))
+                                ],
+                              ),
+                            ),
+                          ),
                           SliverPadding(padding: EdgeInsets.symmetric(vertical: 10)),
                           SliverToBoxAdapter(
                             child: GestureDetector(
                               onTap: () {
-
                               },
                               child: Container(
                                   decoration: BoxDecoration(
@@ -387,7 +704,15 @@ class _InfraState extends State<Infra> {
                                   )),
                             ),
                           ),
-
+                          SliverPadding(padding: EdgeInsets.symmetric(vertical: 10)),
+                          SliverToBoxAdapter(
+                            child: Visibility(
+                              visible:containervisible,
+                              child: SizedBox(
+                                height: 250,
+                              ),
+                            ),
+                          )
                         ],
                       ),
 

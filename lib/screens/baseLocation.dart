@@ -179,7 +179,7 @@ late ResponseBaseLocation responseBaseLocation;
                                           settings: RouteSettings(
                                             name: 'Infrastructure',
                                           ),
-                                          pageBuilder: (context, animation, secondaryAnimation) => Infra(),
+                                          pageBuilder: (context, animation, secondaryAnimation) => Infra(context),
                                           transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                             const begin = Offset(1.0, 0.0);
                                             const end = Offset.zero;

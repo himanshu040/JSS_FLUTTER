@@ -61,6 +61,7 @@ dependencies:
   dropdown_button2: ^1.7.2
   open_file: ^2.1.1
   image_picker: ^0.8.6
+  stack: ^0.2.1
 
 dev_dependencies:
   flutter_test:
@@ -95,6 +96,7 @@ flutter:
     - images/file-checkmark-icon.svg
     - images/Upload record.svg
     - images/add new record.svg
+    - images/add.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
