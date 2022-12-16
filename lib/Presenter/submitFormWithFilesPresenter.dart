@@ -10,8 +10,8 @@ import '../networking/ApiBaseHelper.dart';
 
 
 abstract class ResponseSubmitFormsWithFilesPresenter {
-  void onResponseUploadFile(ResponseFileUpload responseDto);
-  void onErrorUploadFile(String errorTxt);
+  bool onResponseUploadFile(ResponseFileUpload responseDto,String section,String text1,String text2);
+  bool onErrorUploadFile(String errorTxt);
 }
 
 class PresenterSubmitFormWithFiles {
@@ -21,7 +21,7 @@ class PresenterSubmitFormWithFiles {
 
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<dynamic>uploadFile(String url, BuildContext context,Map jsObject,) async {
+  Future<bool>uploadFile(String url, BuildContext context,Map jsObject,String section,String text1,String text2) async {
     try {
       String username=userNameAuth;
       String password=passwordAuth;
@@ -36,23 +36,25 @@ class PresenterSubmitFormWithFiles {
           ResponseFileUpload responseDto = ResponseFileUpload.fromJson(response);
           if(responseDto.statusCode=="APP001")
           {
-            _view.onResponseUploadFile(responseDto);
-          } else
+          bool success=  _view.onResponseUploadFile(responseDto,section,text1,text2);
+           return success;
+          } else {
             _view.onErrorUploadFile(responseDto.statusDesc.toString());
-          return responseDto;
+            return false;
+          }
         }
         else {
           ResponseErrorJ responseErrorJ = ResponseErrorJ.fromJson(response);
           _view.onErrorUploadFile(responseErrorJ.errors[0].message);
-          return;
+          return false;
         }
       } else {
         _view.onErrorUploadFile(Languages.of(context)!.SOMETHING_WENT_WRONG);
-        return;
+        return false;
       }
     } on Exception catch (_) {
       _view.onErrorUploadFile(SOMETHING_WENT_WRONG);
-      return;
+      return false;
     }
   }
 }

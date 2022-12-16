@@ -563,53 +563,53 @@ class _OtherProjectFormState extends State<OtherProjectForm> implements Response
               ),
             );
   }
-  Future<void> uploadFile (File? file)async
-  {
-    FocusManager.instance.primaryFocus?.unfocus();
-    loader();
-    Uint8List imgbytes = await file!.readAsBytes();
-    print(imgbytes);
-    FileUpload fileupload=FileUpload(
-        moduleType: "OTHER_PROJECT",
-      sectionType: "othrproj_evidence",
-      contentType: "File",
-         filename:tempfilepath.toString().split('/').last,
-    file: imgbytes,
-    fileText1: year.text,
-    fileText2: name.text);
-    String url=BASE_URL+UPLOAD_FILES;
-    SharedPreferences preferences=await SharedPreferences.getInstance();
-    String? transactionId=preferences.getString(TSNID);
-    String? param11=preferences.getString(PARAM11);
-    RequestFileUpload requestFileUpload=RequestFileUpload(
-      transactionId: transactionId,
-      param15: widget.darpanId,
-      param11: int.parse(param11.toString()),
-      param13: "BASE",
-      source: source,
-      fileUpload: fileupload
-    );
-   print(requestFileUpload);
-    Util util = new Util();
-    bool isOnline = await util.hasInternet();
-
-    if (isOnline) {
-      return presenterSubmitFormWithFiles.uploadFile(url, context,requestFileUpload.toMap());
-    }
-    else {
-
-      Fluttertoast.showToast(
-          msg: "No Internet!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          textColor: Colors.white,
-          backgroundColor: Colors.black,
-          fontSize: 16.0);
-      return ;
-    }
-
-  }
+  // Future<void> uploadFile (File? file)async
+  // {
+  //   FocusManager.instance.primaryFocus?.unfocus();
+  //   loader();
+  //   Uint8List imgbytes = await file!.readAsBytes();
+  //   print(imgbytes);
+  //   FileUpload fileupload=FileUpload(
+  //       moduleType: "OTHER_PROJECT",
+  //     sectionType: "othrproj_evidence",
+  //     contentType: "File",
+  //        filename:tempfilepath.toString().split('/').last,
+  //   file: imgbytes,
+  //   fileText1: year.text,
+  //   fileText2: name.text);
+  //   String url=BASE_URL+UPLOAD_FILES;
+  //   SharedPreferences preferences=await SharedPreferences.getInstance();
+  //   String? transactionId=preferences.getString(TSNID);
+  //   String? param11=preferences.getString(PARAM11);
+  //   RequestFileUpload requestFileUpload=RequestFileUpload(
+  //     transactionId: transactionId,
+  //     param15: widget.darpanId,
+  //     param11: int.parse(param11.toString()),
+  //     param13: "BASE",
+  //     source: source,
+  //     fileUpload: fileupload
+  //   );
+  //  print(requestFileUpload);
+  //   Util util = new Util();
+  //   bool isOnline = await util.hasInternet();
+  //
+  //   if (isOnline) {
+  //     return presenterSubmitFormWithFiles.uploadFile(url, context,requestFileUpload.toMap());
+  //   }
+  //   else {
+  //
+  //     Fluttertoast.showToast(
+  //         msg: "No Internet!",
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.BOTTOM,
+  //         timeInSecForIosWeb: 1,
+  //         textColor: Colors.white,
+  //         backgroundColor: Colors.black,
+  //         fontSize: 16.0);
+  //     return ;
+  //   }
+  //
+  // }
   Future<dynamic>? loader() {
     isloader = true;
     return showDialog(
@@ -627,39 +627,53 @@ class _OtherProjectFormState extends State<OtherProjectForm> implements Response
       ),
     );
   }
+
   @override
-  void onErrorUploadFile(String errorTxt) {
+  bool onErrorUploadFile(String errorTxt) {
     // TODO: implement onErrorUploadFile
-    Navigator.of(context).pop();
-    Fluttertoast.showToast(
-        msg: errorTxt,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        textColor: Colors.white,
-        backgroundColor: Colors.black,
-        fontSize: 16.0);
-
+    throw UnimplementedError();
   }
 
   @override
-  void onResponseUploadFile(ResponseFileUpload responseDto) {
+  bool onResponseUploadFile(ResponseFileUpload responseDto, String section, String text1, String text2) {
     // TODO: implement onResponseUploadFile
-    Navigator.of(context).pop();
-    Fluttertoast.showToast(
-        msg: responseDto.statusDesc.toString(),
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        textColor: Colors.white,
-        backgroundColor: Colors.black,
-        fontSize: 16.0);
-    setState(() {
-      filepath = tempfilepath;
-      filename = (tempfilepath
-          .toString()
-          .split('/')
-          .last);
-    });
+    throw UnimplementedError();
   }
+
+ 
+  // @override
+  // void onErrorUploadFile(String errorTxt) {
+  //   // TODO: implement onErrorUploadFile
+  //   Navigator.of(context).pop();
+  //   Fluttertoast.showToast(
+  //       msg: errorTxt,
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       timeInSecForIosWeb: 1,
+  //       textColor: Colors.white,
+  //       backgroundColor: Colors.black,
+  //       fontSize: 16.0);
+  //
+  // }
+  //
+  // @override
+  // void onResponseUploadFile(ResponseFileUpload responseDto) {
+  //   // TODO: implement onResponseUploadFile
+  //   Navigator.of(context).pop();
+  //   Fluttertoast.showToast(
+  //       msg: responseDto.statusDesc.toString(),
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       timeInSecForIosWeb: 1,
+  //       textColor: Colors.white,
+  //       backgroundColor: Colors.black,
+  //       fontSize: 16.0);
+  //   setState(() {
+  //     filepath = tempfilepath;
+  //     filename = (tempfilepath
+  //         .toString()
+  //         .split('/')
+  //         .last);
+  //   });
+  // }
 }
